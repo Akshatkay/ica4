@@ -1,0 +1,16 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pythonapi-395115/frontend-ui:$SHORT_SHA', './frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pythonapi-395115/backend:$SHORT_SHA', './backend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pythonapi-395115/frontend-ui:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pythonapi-395115/backend:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deployment/frontend-ui', 'frontend-ui=gcr.io/pythonapi-395115/frontend-ui:$SHORT_SHA', '--namespace=default']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central-1', 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deployment/backend', 'backend=gcr.io/pythonapi-395115/backend:$SHORT_SHA', '--namespace=default']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central-1', 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster']
+
