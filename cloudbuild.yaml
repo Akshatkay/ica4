@@ -5,29 +5,23 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pythonapi-395115/frontend:latest', './frontend']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '-t', 'gcr.io/pythonapi-395115/frontend:latest']
+    args: ['push', 'gcr.io/pythonapi-395115/frontend:latest']
 
-#build and push backend docker image
-
-
+# Build and push backend docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/pythonapi-395115/backend:latest','./backend']
+    args: ['build', '-t', 'gcr.io/pythonapi-395115/backend:latest', './backend']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pythonapi-395115/backend:latest']
 
-    
-#apply kubernetes deployments
-
-
+# Apply Kubernetes deployments
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['apply', '-f', './frontend/frontend-deployment.yaml']
-    env: 
+    env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster'
 
-
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f','./backend/backend-deployment.yaml']
+    args: ['apply', '-f', './backend/backend-deployment.yaml']
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster'
